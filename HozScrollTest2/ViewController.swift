@@ -43,6 +43,8 @@ class ViewController: UIViewController {
         UIImage(named: self.images[self.nextIndex])
     }
 
+    var scroll_sensitivity: CGFloat = 0.15
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -70,7 +72,7 @@ class ViewController: UIViewController {
             
         case .changed:
             let diff = pt.x - before_x
-            mainImageView.transform = .init(translationX: diff*0.15, y: 0)
+            mainImageView.transform = .init(translationX: diff*scroll_sensitivity, y: 0)
             
             if diff > 0 {
                 prevImageView.transform = .init(translationX: diff, y: 0)
@@ -86,13 +88,14 @@ class ViewController: UIViewController {
             let diff = pt.x - before_x
             
             if abs(diff) > w/2 {
-                UIView.animate(withDuration: 0.3, delay: 0, options: []) {
-                    self.mainImageView.transform = .init(translationX: w*0.15*(diff > 0 ? 1 : -1), y: 0)
+                UIView.animate(withDuration: 0.3) {
                     
                     if diff > 0 {
+                        self.mainImageView.transform = .init(translationX: w*self.scroll_sensitivity, y: 0)
                         self.prevImageView.transform = .init(translationX: w, y: 0)
                     }
                     else {
+                        self.mainImageView.transform = .init(translationX: -w*self.scroll_sensitivity, y: 0)
                         self.nextImageView.transform = .init(translationX: -w, y: 0)
                     }
 
@@ -114,12 +117,10 @@ class ViewController: UIViewController {
                 }
             }
             else {
-                UIView.animate(withDuration: 0.3, delay: 0, options: []) {
+                UIView.animate(withDuration: 0.3, delay: 0) {
                     self.mainImageView.transform = .identity
                     self.prevImageView.transform = .identity
                     self.nextImageView.transform = .identity
-                    
-                } completion: { _ in
                 }
             }
 
